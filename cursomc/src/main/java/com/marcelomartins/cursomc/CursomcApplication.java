@@ -1,5 +1,7 @@
 package com.marcelomartins.cursomc;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,30 +14,41 @@ import com.marcelomartins.cursomc.domain.Cidade;
 import com.marcelomartins.cursomc.domain.Cliente;
 import com.marcelomartins.cursomc.domain.Endereco;
 import com.marcelomartins.cursomc.domain.Estado;
+import com.marcelomartins.cursomc.domain.Pagamento;
+import com.marcelomartins.cursomc.domain.PagamentoComBoleto;
+import com.marcelomartins.cursomc.domain.PagamentoComCartao;
+import com.marcelomartins.cursomc.domain.Pedido;
 import com.marcelomartins.cursomc.domain.Produto;
+import com.marcelomartins.cursomc.domain.enums.EstadoPagamento;
 import com.marcelomartins.cursomc.domain.enums.TipoCliente;
 import com.marcelomartins.cursomc.repositories.CategoriaRepository;
 import com.marcelomartins.cursomc.repositories.CidadeRepository;
 import com.marcelomartins.cursomc.repositories.ClienteRepository;
 import com.marcelomartins.cursomc.repositories.EnderecoRepository;
 import com.marcelomartins.cursomc.repositories.EstadoRepository;
+import com.marcelomartins.cursomc.repositories.PagamentoRepository;
+import com.marcelomartins.cursomc.repositories.PedidoRepository;
 import com.marcelomartins.cursomc.repositories.ProdutoRepository;
 
 @SpringBootApplication
 public class CursomcApplication implements CommandLineRunner{
 
 	@Autowired
-	CategoriaRepository categRepo;
+	private CategoriaRepository categRepo;
 	@Autowired
-	ProdutoRepository prodRepo;
+	private ProdutoRepository prodRepo;
 	@Autowired
-	EstadoRepository estRepo;
+	private EstadoRepository estRepo;
 	@Autowired
-	CidadeRepository cidRepo;
+	private CidadeRepository cidRepo;
 	@Autowired
-	ClienteRepository cliRepo;
+	private ClienteRepository cliRepo;
 	@Autowired
-	EnderecoRepository endRepo;
+	private EnderecoRepository endRepo;
+	@Autowired
+	private PedidoRepository pedRepo;
+	@Autowired
+	private PagamentoRepository pagtoRepo;
 	
 	
 	public static void main(String[] args) {
@@ -87,11 +100,25 @@ public class CursomcApplication implements CommandLineRunner{
 		
 		cli0.getEnderecos().addAll(Arrays.asList(e0, e1));
 		
-		
 		estRepo.saveAll(Arrays.asList(est0, est1));
 		cidRepo.saveAll(Arrays.asList(c0, c1, c2));
 		cliRepo.saveAll(Arrays.asList(cli0));
 		endRepo.saveAll(Arrays.asList(e0, e1));
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Pedido ped0, ped1;
+		ped0 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli0, e0);
+		ped1 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cli0, e1);
+		
+		Pagamento pagto0, pagto1;
+		pagto0 = new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped0, 6);
+		ped0.setPagamento(pagto0);
+		pagto1 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped1, sdf.parse("20/10/2017 00:00"), null);
+		ped1.setPagamento(pagto1);
+		cli0.getPedidos().addAll(Arrays.asList(ped0, ped1));
+		
+		pedRepo.saveAll(Arrays.asList(ped0, ped1));
+		pagtoRepo.saveAll(Arrays.asList(pagto0, pagto1));
 	}
 	
 }
