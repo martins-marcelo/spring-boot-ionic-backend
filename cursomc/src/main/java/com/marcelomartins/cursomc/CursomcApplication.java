@@ -1,7 +1,6 @@
 package com.marcelomartins.cursomc;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import com.marcelomartins.cursomc.domain.Cidade;
 import com.marcelomartins.cursomc.domain.Cliente;
 import com.marcelomartins.cursomc.domain.Endereco;
 import com.marcelomartins.cursomc.domain.Estado;
+import com.marcelomartins.cursomc.domain.ItemPedido;
 import com.marcelomartins.cursomc.domain.Pagamento;
 import com.marcelomartins.cursomc.domain.PagamentoComBoleto;
 import com.marcelomartins.cursomc.domain.PagamentoComCartao;
@@ -26,6 +26,7 @@ import com.marcelomartins.cursomc.repositories.CidadeRepository;
 import com.marcelomartins.cursomc.repositories.ClienteRepository;
 import com.marcelomartins.cursomc.repositories.EnderecoRepository;
 import com.marcelomartins.cursomc.repositories.EstadoRepository;
+import com.marcelomartins.cursomc.repositories.ItemPedidoRepository;
 import com.marcelomartins.cursomc.repositories.PagamentoRepository;
 import com.marcelomartins.cursomc.repositories.PedidoRepository;
 import com.marcelomartins.cursomc.repositories.ProdutoRepository;
@@ -49,7 +50,8 @@ public class CursomcApplication implements CommandLineRunner{
 	private PedidoRepository pedRepo;
 	@Autowired
 	private PagamentoRepository pagtoRepo;
-	
+	@Autowired
+	private ItemPedidoRepository ipRepo;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -119,6 +121,20 @@ public class CursomcApplication implements CommandLineRunner{
 		
 		pedRepo.saveAll(Arrays.asList(ped0, ped1));
 		pagtoRepo.saveAll(Arrays.asList(pagto0, pagto1));
+		
+		ItemPedido ip0, ip1, ip2;
+		ip0 = new ItemPedido(ped0, p1, 0.00, 1, 2000.00);
+		ip1 = new ItemPedido(ped0, p3, 0.00, 2, 80.00);
+		ip2 = new ItemPedido(ped1, p2, 100.00, 1, 800.00);
+		
+		ped0.getItens().addAll(Arrays.asList(ip0, ip1));
+		ped1.getItens().addAll(Arrays.asList(ip2));
+		
+		p1.getItens().addAll(Arrays.asList(ip0));
+		p2.getItens().addAll(Arrays.asList(ip2));
+		p3.getItens().addAll(Arrays.asList(ip1));
+		
+		ipRepo.saveAll(Arrays.asList(ip0, ip1, ip2));
 	}
 	
 }
