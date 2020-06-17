@@ -43,4 +43,10 @@ public class CategoriaResource {
 		obj = service.update(obj);
 		return ResponseEntity.noContent().build();
 	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE) //Adicionando verbo http para dizer que este é um metodo rest
+	public ResponseEntity<Void> delete(@PathVariable Integer id) {
+		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
 }
