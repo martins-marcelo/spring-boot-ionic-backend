@@ -20,6 +20,7 @@ import com.marcelomartins.cursomc.domain.PagamentoComCartao;
 import com.marcelomartins.cursomc.domain.Pedido;
 import com.marcelomartins.cursomc.domain.Produto;
 import com.marcelomartins.cursomc.domain.enums.EstadoPagamento;
+import com.marcelomartins.cursomc.domain.enums.Perfil;
 import com.marcelomartins.cursomc.domain.enums.TipoCliente;
 import com.marcelomartins.cursomc.repositories.CategoriaRepository;
 import com.marcelomartins.cursomc.repositories.CidadeRepository;
@@ -113,21 +114,28 @@ public class DBService {
 		est0.getCidades().addAll(Arrays.asList(c0));
 		est1.getCidades().addAll(Arrays.asList(c1, c2));
 
-		Cliente cli0;
+		Cliente cli0, cli1;
 		cli0 = new Cliente(
-				null, "Maria Silva", "mrcelutv@gmail.com", "03634660295", TipoCliente.PESSOAFISICA, encoder.encode("123"));
+				null, "Maria Silva", "mrcelutv@gmail.com", "03543009206", TipoCliente.PESSOAFISICA, encoder.encode("123"));
 		cli0.getTelefones().addAll(Arrays.asList("2345678", "1345688"));
+		cli1 = new Cliente(
+				null, "Marcelo Martins", "bfmarcelo1@gmail.com", "03634660295", TipoCliente.PESSOAFISICA, encoder.encode("123"));
+		cli1.addPerfil(Perfil.ADMIN);
+		cli1.getTelefones().addAll(Arrays.asList("984183204", "999885644"));
+		
 
-		Endereco e0, e1;
+		Endereco e0, e1, e2;
 		e0 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardim", "38220834", cli0, c0);
 		e1 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", cli0, c1);
+		e2 = new Endereco(null, "Avenida Ceará", "540", null, "Bosque", "6990000", cli1, c1);
 
 		cli0.getEnderecos().addAll(Arrays.asList(e0, e1));
+		cli1.getEnderecos().addAll(Arrays.asList(e2));
 
 		estRepo.saveAll(Arrays.asList(est0, est1));
 		cidRepo.saveAll(Arrays.asList(c0, c1, c2));
-		cliRepo.saveAll(Arrays.asList(cli0));
-		endRepo.saveAll(Arrays.asList(e0, e1));
+		cliRepo.saveAll(Arrays.asList(cli0, cli1));
+		endRepo.saveAll(Arrays.asList(e0, e1, e2));
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		Pedido ped0, ped1;
