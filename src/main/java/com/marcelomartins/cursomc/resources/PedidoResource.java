@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.marcelomartins.cursomc.domain.Categoria;
 import com.marcelomartins.cursomc.domain.Pedido;
-import com.marcelomartins.cursomc.dto.CategoriaDTO;
 import com.marcelomartins.cursomc.services.PedidoService;
 
 @RestController //Definindo que este é um controlador rest
