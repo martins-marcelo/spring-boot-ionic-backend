@@ -9,10 +9,11 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -20,20 +21,20 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.marcelomartins.cursomc.domain.Pedido;
 import com.marcelomartins.cursomc.services.PedidoService;
 
-@RestController //Definindo que este é um controlador rest
-@RequestMapping(value="/pedidos") //Adicionando endpoint ao controlador
+@RestController
+@RequestMapping(value="/pedidos")
 public class PedidoResource {
 	
 	@Autowired
 	private PedidoService service;
 	
-	@RequestMapping(value="/{id}", method=RequestMethod.GET) //Adicionando verbo http para dizer que este é um metodo rest
+	@GetMapping(value="/{id}")
 	public ResponseEntity<Pedido> find(@PathVariable Integer id) {
 		Pedido obj = service.find(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
-	@RequestMapping(method=RequestMethod.POST)
+	@PostMapping
 	public ResponseEntity<Void> insert(@Valid @RequestBody Pedido obj){
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -41,7 +42,7 @@ public class PedidoResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
-	@RequestMapping(method = RequestMethod.GET)
+	@GetMapping
 	public ResponseEntity<Page<Pedido>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
 			@RequestParam(value = "orderBy", defaultValue = "instante") String orderBy,
