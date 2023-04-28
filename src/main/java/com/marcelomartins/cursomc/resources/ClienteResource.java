@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.marcelomartins.cursomc.dto.PageableDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -71,13 +72,9 @@ public class ClienteResource {
 	}
 
 	@PreAuthorize("hasAnyRole('ADMIN')")
-	@GetMapping(value = "/page")
-	public ResponseEntity<Page<ClienteDTO>> findPage(@RequestParam(value = "page", defaultValue = "0") Integer page,
-			@RequestParam(value = "linesPerPage", defaultValue = "24") Integer linesPerPage,
-			@RequestParam(value = "orderBy", defaultValue = "nome") String orderBy,
-			@RequestParam(value = "direction", defaultValue = "ASC") String direction) {
-
-		Page<Cliente> list = service.findPage(page, linesPerPage, orderBy, direction);
+	@PostMapping(value = "/page")
+	public ResponseEntity<Page<ClienteDTO>> findPage(@RequestBody PageableDTO pageableDTO) {
+		Page<Cliente> list = service.findPage(pageableDTO);
 		Page<ClienteDTO> listDTO = list.map(obj -> new ClienteDTO(obj));
 		return ResponseEntity.ok().body(listDTO);
 	}

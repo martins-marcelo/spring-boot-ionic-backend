@@ -3,6 +3,7 @@ package com.marcelomartins.cursomc.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.marcelomartins.cursomc.dto.ProdutoPageableDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,9 +31,11 @@ public class ProdutoService {
 				"Objeto não encontrado! Id: " + id + ", Tipo: " + Produto.class.getName()));
 	}
 
-	public Page<Produto> search(String nome, List<Integer> ids, Integer page, Integer linesPerPage, String orderBy, String direction){
-		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-		List<Categoria> categorias = catRepo.findAllById(ids);
-		return prodRepo.findDistinctByNomeContainingAndCategoriasIn(nome, categorias, pageRequest);
+	public Page<Produto> search(ProdutoPageableDTO data){
+		PageRequest pageRequest = PageRequest.of(data.getPage(), data.getLinesPerPage(),
+				Direction.valueOf(data.getDirection()),
+				data.getOrderBy());
+		List<Categoria> categorias = catRepo.findAllById(data.getCategorias());
+		return prodRepo.findDistinctByNomeContainingAndCategoriasIn(data.getNome(), categorias, pageRequest);
 	}
 }
