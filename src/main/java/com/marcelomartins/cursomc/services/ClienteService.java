@@ -3,6 +3,7 @@ package com.marcelomartins.cursomc.services;
 import java.util.List;
 import java.util.Optional;
 
+import com.marcelomartins.cursomc.dto.PageableDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -74,8 +75,9 @@ public class ClienteService {
 		return cliRepo.findAll();
 	}
 
-	public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
-		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+	public Page<Cliente> findPage(PageableDTO data) {
+		PageRequest pageRequest = PageRequest.of(data.getPage(), data.getLinesPerPage(),
+				Direction.valueOf(data.getDirection()), data.getOrderBy());
 		return cliRepo.findAll(pageRequest);
 	}
 
